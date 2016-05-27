@@ -32,8 +32,8 @@
                 <td>
                   <p class="text-danger" ng-if="!row.hasSetupLog && !row.hasTeardownLog">No Logs found</p>
                   <p>
-                    <a class="btn btn-xs btn-default" href="#/container_logs/{{row.id}}/setup" ng-if="row.hasSetupLog">Setup</a>
-                    <a class="btn btn-xs btn-default" href="#/container_logs/{{row.id}}/teardown" ng-if="row.hasTeardownLog">Teardown</a>
+                    <a class="btn btn-xs btn-default" href="#/container_logs/{{row.name}}/setup" ng-if="row.hasSetupLog">Setup</a>
+                    <a class="btn btn-xs btn-default" href="#/container_logs/{{row.name}}/teardown" ng-if="row.hasTeardownLog">Teardown</a>
                   </p>
 
 
