@@ -94,12 +94,17 @@ webuiControllers.controller('OverviewController', ['$scope', '$http', '$routePar
             // For nodes fetch their logs too
             if ( resource === 'containers' ){
                 angular.forEach($scope.contents, function(item, index){
+                    $scope.contents[index].logFetched = false;
                     $scope.contents[index].hasSetupLog = false;
                     $scope.contents[index].hasTeardownLog = false;
 
                     $http.get('/container_logs/'+item.name).success( function( data ){
+                        $scope.contents[index].logFetched = true;
                         $scope.contents[index].hasSetupLog = data.setup_log_url;
                         $scope.contents[index].hasTeardownLog = data.teardown_log_url;
+                    }).error(function(data){
+                        $scope.contents[index].logFetched = true;
+                        postErrorAlert(AlertMsg, data);
                     });
                 });
             }
