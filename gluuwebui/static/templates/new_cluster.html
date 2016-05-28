@@ -1,4 +1,12 @@
-<h2>New Cluster</h2>
+<div class="row">
+  <div class="col-md-6">
+    <h2>New Cluster</h2>
+  </div>
+  <div class="col-md-6">
+    <p class="text-right text-info"><br/>* marked fields are mandatory</p>
+  </div>
+</div>
+
 <form name="form" ng-submit="submit()">
   <div class="form-group" ng-class="{'has-error': form.name.$error.clustername || form.name.$error.minlength }">
         <label class="control-label" for="name">Name *</label>
@@ -9,7 +17,7 @@
     </div>
     <div class="form-group">
         <label class="control-label" for="description">Description</label>
-        <input class="form-control" type="text" name="description" ng-model="resourceData.description" required>
+        <input class="form-control" type="text" name="description" ng-model="resourceData.description">
         <span class="help-block">Description of the purpose of the cluster</span>
     </div>
     <div class="form-group">
@@ -37,20 +45,22 @@
         <input class="form-control" type="text" name="country_code" ng-model="resourceData.country_code" required>
         <span class="help-block">ISO 3166-1 alpha-2 country code.</span>
     </div>
-    <div class="form-group">
+    <div class="form-group" ng-class="{'has-error': form.admin_email.$error.email}">
         <label class="control-label" for="admin_email">Admin Email *</label>
-        <input class="form-control" type="text" name="admin_email" ng-model="resourceData.admin_email" required>
+        <input class="form-control" type="email" name="admin_email" ng-model="resourceData.admin_email" ng-model-options="{ updateOn: 'blur' }" email required>
         <span class="help-block">Admin email address for X.509 certificate.</span>
+        <span class="help-block" ng-if="form.admin_email.$error.email">Enter a valid email address</span>
     </div>
     <div class="form-group">
         <label class="control-label" for="ox_cluster_hostname">oxCluster Hostname *</label>
         <input class="form-control" type="text" name="ox_cluster_hostname" ng-model="resourceData.ox_cluster_hostname" required>
         <span class="help-block">Domain name to use for the admin interface website.</span>
     </div>
-    <div class="form-group">
+    <div class="form-group" ng-class="{'has-error': form.admin_pw.$error.minlength}">
         <label class="control-label" for="admin_pw">Admin Password *</label>
-        <input class="form-control" type="password" name="admin_pw" ng-model="resourceData.admin_pw" required>
+        <input class="form-control" type="password" name="admin_pw" ng-model="resourceData.admin_pw" ng-model-options="{ updateOn: 'blur' }" minlength="6" required>
         <span class="help-block">Default password for default Admin account. Minimum password length is 6 characters.</span>
+        <span class="help-block" ng-if="form.admin_pw.$error.minlength">Your password is less than 6 characters</span>
     </div>
-    <button class="btn btn-primary" type="submit">Create Cluster</button>
+    <button class="btn btn-primary" type="submit" ng-disabled="form.$invalid">Create Cluster</button>
 </form>

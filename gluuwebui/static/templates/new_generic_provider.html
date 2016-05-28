@@ -1,8 +1,16 @@
-<h2>New Generic Provider</h2>
-<form ng-submit="submit()">
+<div class="row">
+  <div class="col-md-6">
+    <h2>New Generic Provider</h2>
+  </div>
+  <div class="col-md-6">
+    <p class="text-right text-info"><br/>* marked fields are mandatory</p>
+  </div>
+</div>
+
+<form ng-submit="submit()" name="form">
     <div class="form-group">
         <label for="name">Name *</label>
-        <input class="form-control" name="name" type="text" ng-model="resourceData.name">
+        <input class="form-control" name="name" type="text" ng-model="resourceData.name" required>
         <span class="help-block">A unique name of the provider.</span>
     </div>
     <div class="form-group">

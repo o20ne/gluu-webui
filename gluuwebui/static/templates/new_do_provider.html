@@ -1,8 +1,17 @@
-<h2>New DigitalOcean Provider</h2>
-<form ng-submit="submit()">
-    <div class="form-group">
+<div class="row">
+  <div class="col-md-6">
+    <h2>New DigitalOcean Provider</h2>
+  </div>
+  <div class="col-md-6">
+    <p class="text-right text-info"><br/>* marked fields are mandatory</p>
+  </div>
+</div>
+
+
+<form ng-submit="submit()" name="form">
+  <div class="form-group">
         <label for="name">Name *</label>
-        <input class="form-control" name="name" type="text" ng-model="resourceData.name">
+        <input class="form-control" name="name" type="text" ng-model="resourceData.name" ng-model-options="{updateOn: 'blur'}" required>
         <span class="help-block">A unique name of the provider.</span>
     </div>
     <div class="form-group">
@@ -11,17 +20,20 @@
     </div>
     <div class="checkbox">
       <label>
-        <input type="checkbox" ng-model="resourceData.digitalocean_backups">Enable DigitalOcean Backups (turned off by default)</label>
+        <input type="checkbox" ng-model="resourceData.digitalocean_backups" ng-init="resourceData.digitalocean_backups=false">
+        Enable DigitalOcean Backups (turned off by default)</label>
       </label>
     </div>
     <div class="checkbox">
       <label>
-        <input type="checkbox" ng-model="resourceData.digitalocean_private_networking">Enable DigitalOcean private networking (turned off by default)</label>
+        <input type="checkbox" ng-model="resourceData.digitalocean_private_networking" ng-init="resourceData.digitalocean_private_networking=false">
+        Enable DigitalOcean private networking (turned off by default)</label>
       </label>
     </div>
     <div class="form-group">
         <label for="digitalocean_region">DigitalOcean Region *</label>
-        <select id="digitalocean_region" name="digitalocean_region" class="form-control" ng-model="resourceData.digitalocean_region" required>
+        <select id="digitalocean_region" name="digitalocean_region" class="form-control" ng-model="resourceData.digitalocean_region"
+          ng-init="resourceData.digitalocean_region='nyc1'" required>
             <option value="nyc1">New York 1</option>
             <option value="nyc2">New York 2</option>
             <option value="nyc3">New York 3</option>
@@ -37,7 +49,8 @@
     </div>
     <div class="form-group">
         <label for="digitalocean_size">DigitalOcean Droplet Size</label>
-        <select id="digitalocean_size" name="digitalocean_size" class="form-control" ng-model="resourceData.digitalocean_size" required>
+        <select id="digitalocean_size" name="digitalocean_size" class="form-control" ng-model="resourceData.digitalocean_size"
+          ng-init="resourceData.digitalocean_size='4gb'" required>
             <option value="4gb">4 GB, 2 CPUs (minimum recommended)</option>
             <option value="8gb">8 GB, 4 CPUs</option>
             <option value="16gb">16 GB, 8 CPUs</option>
@@ -46,5 +59,5 @@
             <option value="64gb">64 GB, 20 CPUs</option>
         </select>
     </div>
-    <button class="btn btn-primary" type="submit">Add provider</button>
+    <button class="btn btn-primary" type="submit" ng-disabled="form.$invalid">Add provider</button>
 </form>

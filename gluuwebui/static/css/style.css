@@ -94,3 +94,6 @@ body {
 pre{
     font-size: 12px;
 }
+.navbar-brand{
+    padding: 10px 15px;
+}
