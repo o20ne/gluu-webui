@@ -277,10 +277,36 @@ webuiControllers.controller( 'ResourceController', ['$scope', '$http', '$routePa
 
             $http.get("/providers").success(function(data){
                 $scope.providers = data;
+                if(!data.length) {
+                    AlertMsg.addMsg("No Providers! There are no providers available to deploy nodes. Create a provider first.", "danger");
+                }
             }).error(function(data){
                 postErrorAlert(AlertMsg, data);
             });
+            $http.get("/nodes").success(function(data){
+                $scope.nodes = data;
+                $scope.discoveryCount = 0;
+                $scope.masterCount = 0;
+                $scope.workerCount = 0;
 
+                if(!data.length) {
+                    AlertMsg.addMsg("There are no nodes in the cluster. Create a DISCOVERY node first.", "info");
+                } else {
+                    angular.forEach(data, function(item, index){
+                        switch(item.type) {
+                            case 'discovery': $scope.discoveryCount++;
+                                              break;
+                            case 'master':    $scope.masterCount++;
+                                              break;
+                            case 'worker':    $scope.workerCount++;
+                                              break;
+                        }
+                    });
+                }
+
+            }).error(function(data){
+                postErrorAlert(AlertMsg, data);
+            });
         }
 
         /*
@@ -289,7 +315,10 @@ webuiControllers.controller( 'ResourceController', ['$scope', '$http', '$routePa
         if( resource === 'containers'){
             $http.get('/nodes').success(function(data){
                 $scope.nodes = data;
-            });
+                if(!data.length) {
+                    AlertMsg.addMsg("No Nodes! There are no nodes available to deploy contianers. Create a node first.", "danger");
+                }
+            }).error(function(data){ postErrorAlert(AlertMsg, data); });
         }
 
         /*

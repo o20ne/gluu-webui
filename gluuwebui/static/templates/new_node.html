@@ -16,6 +16,8 @@
             <option value="master">Master</option>
             <option value="worker">Worker</option>
         </select>
+        <span class="help-block" ng-if="node_type == 'worker' && !masterCount">There is no master node. A <code>master</code> is required to deploy worker nodes.</span>
+        <span class="help-block" ng-if="node_type == 'master' && !discoveryCount">There is no discovery node. A <code>discovery</code> node is required to deploy master nodes.</span>
     </div>
     <div class="form-group">
         <label for="name">Name</label>

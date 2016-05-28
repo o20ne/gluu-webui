@@ -294,72 +294,138 @@ describe('Controllers', function(){
     });
 
     describe('ResourceController', function(){
-        describe('intialization code', function(){
-            it('should set edit mode to false if action=new', function(){
-                $routeParams = {resource: 'resource', action: 'new'};
-                var controller = createController('ResourceController');
-                expect($rootScope.editMode).toEqual(false);
-                expect($routeParams.action).toEqual('new');
-            });
 
-            it('should set edit mode to true if action=edit', function(){
-                $routeParams = {resource: 'resource', action: 'edit'};
-                var controller = createController('ResourceController');
-                expect($rootScope.editMode).toEqual(true);
-                expect($routeParams.action).toEqual('edit');
-            });
+        it('should set edit mode to false if action=new', function(){
+            $routeParams = {resource: 'resource', action: 'new'};
+            var controller = createController('ResourceController');
+            expect($rootScope.editMode).toEqual(false);
+            expect($routeParams.action).toEqual('new');
+        });
 
-            it('should get resourceData using id in editmode', function(){
-                $routeParams = {resource: 'resource', action: 'edit', id: 'some-id'};
-                var data = {id: 'some-id', data: 'some-data'};
-                $httpBackend.expectGET('/resource/some-id').respond(200, data);
+        it('should set edit mode to true if action=edit', function(){
+            $routeParams = {resource: 'resource', action: 'edit'};
+            var controller = createController('ResourceController');
+            expect($rootScope.editMode).toEqual(true);
+            expect($routeParams.action).toEqual('edit');
+        });
+
+        it('should get resourceData using id in editmode', function(){
+            $routeParams = {resource: 'resource', action: 'edit', id: 'some-id'};
+            var data = {id: 'some-id', data: 'some-data'};
+            $httpBackend.expectGET('/resource/some-id').respond(200, data);
+            var controller = createController('ResourceController');
+            expect($rootScope.resourceData).toEqual({});
+            $httpBackend.flush();
+            expect($rootScope.resourceData).toEqual(data);
+        });
+
+        it('should post an alert if it cant get data in edit mode', function(){
+            expect(AlertMsg.alerts.length).toEqual(0);
+            $routeParams = {resource: 'resource', action: 'edit', id: 'some-id'};
+            $httpBackend.expectGET('/resource/some-id').respond(400, {message: 'no data'});
+            var controller = createController('ResourceController');
+            $httpBackend.flush();
+            expect(AlertMsg.alerts.length).toEqual(1);
+            expect($rootScope.resourceData).toEqual({});
+        });
+
+        it('should add an alert when ID is not supplied for editing', function(){
+            expect(AlertMsg.alerts.length).toEqual(0);
+            $routeParams = {resource: 'resource', action: 'edit'};
+            var controller = createController('ResourceController');
+            expect(AlertMsg.alerts.length).toEqual(1);
+            expect($rootScope.resourceData).toEqual({});
+        });
+
+        /*
+         *  Tests to verfiy NEW NODE form specific actions
+         */
+        describe('when resource is NODE', function(){
+            it('should get the list of providers and nodes for Node form', function(){
+                $routeParams = {resource: 'nodes'};
+                $httpBackend.expectGET('/providers').respond(200, [{id: 'id2', name: 'provider1'}]);
+                $httpBackend.expectGET('/nodes').respond(200, [{id: 'node-id', name: 'node'}]);
                 var controller = createController('ResourceController');
-                expect($rootScope.resourceData).toEqual({});
                 $httpBackend.flush();
-                expect($rootScope.resourceData).toEqual(data);
+                expect($rootScope.providers.length).toEqual(1);
+                expect($rootScope.nodes.length).toEqual(1);
             });
 
-            it('should post an alert if it cant get data in edit mode', function(){
+            it('should post alerts when dependency fetching fails for New Node', function(){
+                $routeParams = {resource: 'nodes'};
+                $httpBackend.expectGET('/providers').respond(400, {message: 'NOT OK'}); // FAIL - Message 1
+                $httpBackend.expectGET('/nodes').respond(400, {message: 'NOT OK'}); // FAIL - Message 2
                 expect(AlertMsg.alerts.length).toEqual(0);
-                $routeParams = {resource: 'resource', action: 'edit', id: 'some-id'};
-                $httpBackend.expectGET('/resource/some-id').respond(400, {message: 'no data'});
+                var controller = createController('ResourceController');
+                $httpBackend.flush();
+                expect(AlertMsg.alerts.length).toEqual(2);
+            });
+
+            it('should post alert if there are no providers', function(){
+                $routeParams = {resource: 'nodes'};
+                $httpBackend.expectGET('/providers').respond(200, []); // FAIL - Message 1
+                $httpBackend.expectGET('/nodes').respond(200, [{id: 'name'}]);
+                expect(AlertMsg.alerts.length).toEqual(0);
                 var controller = createController('ResourceController');
                 $httpBackend.flush();
                 expect(AlertMsg.alerts.length).toEqual(1);
-                expect($rootScope.resourceData).toEqual({});
             });
 
-            it('should add an alert when ID is not supplied for editing', function(){
+            it('should warn the user that there are no nodes', function(){
+                $routeParams = {resource: 'nodes'};
+                $httpBackend.expectGET('/providers').respond(200, [{id: 'pro-1'}]);
+                $httpBackend.expectGET('/nodes').respond(200, []);
                 expect(AlertMsg.alerts.length).toEqual(0);
-                $routeParams = {resource: 'resource', action: 'edit'};
                 var controller = createController('ResourceController');
+                $httpBackend.flush();
                 expect(AlertMsg.alerts.length).toEqual(1);
-                expect($rootScope.resourceData).toEqual({});
             });
 
-            /*
-             *  Tests to verfiy NEW NODE form specific actions
-             */
-            describe('when resource is NODE', function(){
-                it('should get the list of providers for Node form', function(){
-                    $routeParams = {resource: 'nodes'};
-                    $httpBackend.expectGET('/providers').respond(200, [{id: 'id2', name: 'provider1'}]);
-                    var controller = createController('ResourceController');
-                    $httpBackend.flush();
-                    expect($rootScope.providers.length).toEqual(1);
-                });
-
-                it('should post alerts when dependency fetching fails for New Node', function(){
-                    $routeParams = {resource: 'nodes'};
-                    $httpBackend.expectGET('/providers').respond(400, {message: 'NOT OK'});
-                    expect(AlertMsg.alerts.length).toEqual(0);
-                    var controller = createController('ResourceController');
-                    $httpBackend.flush();
-                    expect(AlertMsg.alerts.length).toEqual(1);
-                });
+            it('should set counts of the available node types', function(){
+                $routeParams = {resource: 'nodes'};
+                $httpBackend.expectGET('/providers').respond(200, [{id: 'pro-1'}]);
+                $httpBackend.expectGET('/nodes').respond(200, [{type: 'discovery'}, {type: 'master'}]);
+                var controller = createController('ResourceController');
+                $httpBackend.flush();
+                expect($rootScope.masterCount).toEqual(1);
+                expect($rootScope.discoveryCount).toEqual(1);
+                expect($rootScope.workerCount).toEqual(0);
             });
 
         });
+
+        /*
+         * Tests to verify things when NEW CONTAINER is created
+         */
+        describe('actions when resource is containers', function(){
+            it('should load all the nodes into the form', function(){
+                $routeParams = {resource: 'containers'};
+                $httpBackend.expectGET('/nodes').respond(200, [{id: 'id1', name: 'name1'}]);
+                var controller = createController('ResourceController');
+                $httpBackend.flush();
+                expect($rootScope.nodes).toEqual([{id: 'id1', name: 'name1'}]);
+            });
+
+            it('should post an alert if it cannot fetch any nodes', function(){
+                $routeParams = {resource: 'containers'};
+                $httpBackend.expectGET('/nodes').respond(400, {message: 'No data'});
+                expect(AlertMsg.alerts.length).toEqual(0);
+                var controller = createController('ResourceController');
+                $httpBackend.flush();
+                expect(AlertMsg.alerts.length).toEqual(1);
+            });
+
+            it('should post an alert when there are no nodes', function(){
+                $routeParams = {resource: 'containers'};
+                $httpBackend.expectGET('/nodes').respond(200, []);
+                expect(AlertMsg.alerts.length).toEqual(0);
+                var controller = createController('ResourceController');
+                $httpBackend.flush();
+                expect(AlertMsg.alerts.length).toEqual(1);
+            });
+
+        });
+
 
         describe('$scope.submit', function(){
             beforeEach(function(){
@@ -400,6 +466,7 @@ describe('Controllers', function(){
             it('should post data to /nodes/node_type when the resource is node', function(){
                 $routeParams = {resource: 'nodes'};
                 $httpBackend.expectGET('/providers').respond(200, []);
+                $httpBackend.expectGET('/nodes').respond(200, []);
                 var controller = createController('ResourceController');
                 $rootScope.node_type = 'master';
                 $rootScope.resourceData = {id: 'id1'};
