@@ -1,56 +1,54 @@
 <h2>New Cluster</h2>
-<form ng-submit="submit()">
-    <div class="form-group" ng-if="editMode">
-        <label for="id">ID</label>
-        <input class="form-control" type="text" name="id" disabled ng-model="resourceData.id">
-    </div>
-    <div class="form-group">
-        <label for="name">Name *</label>
-        <input class="form-control" type="text" name="name"  ng-model="resourceData.name" required>
+<form name="form" ng-submit="submit()">
+  <div class="form-group" ng-class="{'has-error': form.name.$error.clustername || form.name.$error.minlength }">
+        <label class="control-label" for="name">Name *</label>
+        <input class="form-control" type="text" name="name" ng-model="resourceData.name" ng-model-options="{ updateOn: 'blur' }" minlength="3" clustername required>
         <span class="help-block">Name of the cluster</span>
+        <span class="help-block" ng-show="form.name.$error.clustername">The name should start &amp; end with an alphanumeric, can have . - _ in the middle.</span>
+        <span class="help-block" ng-show="form.name.$error.minlength">The name should be at least 3 characters long. </span>
     </div>
     <div class="form-group">
-        <label for="description">Description</label>
+        <label class="control-label" for="description">Description</label>
         <input class="form-control" type="text" name="description" ng-model="resourceData.description" required>
         <span class="help-block">Description of the purpose of the cluster</span>
     </div>
     <div class="form-group">
-        <label for="org_name">Organization Name *</label>
+        <label class="control-label" for="org_name">Organization Name *</label>
         <input class="form-control" type="text" name="org_name" ng-model="resourceData.org_name" required>
         <span class="help-block">Organization name for X.509 certificate.</span>
     </div>
     <div class="form-group">
-        <label for="org_short_name">Org. Name Abbrevation *</label>
+        <label class="control-label" for="org_short_name">Org. Name Abbrevation *</label>
         <input class="form-control" type="text" name="org_short_name" ng-model="resourceData.org_short_name" required>
         <span class="help-block">Organization short name for X.509 certificate.</span>
     </div>
     <div class="form-group">
-        <label for="city">City *</label>
+        <label class="control-label" for="city">City *</label>
         <input class="form-control" type="text" name="city" ng-model="resourceData.city" required>
         <span class="help-block">City for X.509 certificate.</span>
     </div>
     <div class="form-group">
-        <label for="state">State or Province *</label>
+        <label class="control-label" for="state">State or Province *</label>
         <input class="form-control" type="text" name="state" ng-model="resourceData.state" required>
         <span class="help-block">State or province name for X.509 certificate.</span>
     </div>
     <div class="form-group">
-        <label for="country_code">Country Code *</label>
+        <label class="control-label" for="country_code">Country Code *</label>
         <input class="form-control" type="text" name="country_code" ng-model="resourceData.country_code" required>
         <span class="help-block">ISO 3166-1 alpha-2 country code.</span>
     </div>
     <div class="form-group">
-        <label for="admin_email">Admin Email *</label>
+        <label class="control-label" for="admin_email">Admin Email *</label>
         <input class="form-control" type="text" name="admin_email" ng-model="resourceData.admin_email" required>
         <span class="help-block">Admin email address for X.509 certificate.</span>
     </div>
     <div class="form-group">
-        <label for="ox_cluster_hostname">oxCluster Hostname *</label>
+        <label class="control-label" for="ox_cluster_hostname">oxCluster Hostname *</label>
         <input class="form-control" type="text" name="ox_cluster_hostname" ng-model="resourceData.ox_cluster_hostname" required>
         <span class="help-block">Domain name to use for the admin interface website.</span>
     </div>
     <div class="form-group">
-        <label for="admin_pw">Admin Password *</label>
+        <label class="control-label" for="admin_pw">Admin Password *</label>
         <input class="form-control" type="password" name="admin_pw" ng-model="resourceData.admin_pw" required>
         <span class="help-block">Default password for default Admin account. Minimum password length is 6 characters.</span>
     </div>

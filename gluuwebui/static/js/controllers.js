@@ -1,4 +1,4 @@
- webuiControllers = angular.module('webuiControllers', ['ui.bootstrap']);
+var webuiControllers = angular.module('webuiControllers', ['ui.bootstrap']);
 
 webuiControllers.service('AlertMsg', ['$rootScope', function( $rootScope ){
     var service = {
@@ -218,6 +218,25 @@ webuiControllers.controller('OverviewController', ['$scope', '$http', '$routePar
 
 }]);
 
+var CLUSTER_NAME_REGEX = /^[a-zA-Z\d]+[\w\d\.\-]*[a-zA-Z\d]$/;
+webuiControllers.directive('clustername', function(){
+    return {
+        require: 'ngModel',
+        link: function(scope, elm, attrs, ctrl) {
+            ctrl.$validators.clustername = function(modelValue, viewValue) {
+                if (ctrl.$isEmpty(modelValue)) {
+                    return true;
+                }
+
+                if (CLUSTER_NAME_REGEX.test(modelValue)) {
+                    return true;
+                }
+
+                return false;
+            };
+        }
+    };
+});
 
 // controller that is used to respond to add/edit actions on resources
 webuiControllers.controller( 'ResourceController', ['$scope', '$http', '$routeParams', 'AlertMsg', '$location', '$modal',
