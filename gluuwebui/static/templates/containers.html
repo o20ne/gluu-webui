@@ -4,20 +4,51 @@
     </h2>
 </div>
 <div id="resourceTable" class="row" ng-if="contents.length">
-    <table class="table table-bordered table-hover">
-        <thead>
+  <table class="table table-bordered table-hover" st-table="viewContents" st-safe-src="contents">
+        <thead title="Click on the headers to sort">
             <tr class="active">
-                <th>Name</th>
-                <th>State</th>
-                <th>Type</th>
-                <th>Cluster</th>
-                <th>Node</th>
+                <th st-sort="name">Name</th>
+                <th st-sort="state">State</th>
+                <th st-sort="type">Type</th>
+                <th st-sort="cluster_id">Cluster</th>
+                <th st-sort="node_id">Node</th>
                 <th>Logs</th>
                 <th>Actions</th>
             </tr>
+            <tr>
+                <th>
+                  <input st-search="name" placeholder="Enter text to filter" class="input-sm form-control" type="search"/>
+                </th>
+                <th>
+                  <select id="statefilter" name="statefilter" class="input-sm form-control" st-search="state">
+                    <option value="">All</option>
+                    <option value="{{row.state}}" ng-repeat="row in contents | unique:'state'">{{ row.state }}</option>
+                  </select>
+                </th>
+                <th>
+                  <select id="typefilter" name="typefilter" class="input-sm form-control" st-search="type">
+                    <option value="">All</option>
+                    <option value="{{row.type}}" ng-repeat="row in contents | unique:'type'">{{ row.type }}</option>
+                  </select>
+                </th>
+                <th>
+                  <select id="clusterfilter" name="clusterfilter" class="input-sm form-control" st-search="cluster_id">
+                    <option value="">All</option>
+                    <option value="{{row.cluster_id}}" ng-repeat="row in contents | unique:'cluster_id'">{{getResourceName( clusters, row.cluster_id )}}</option>
+                  </select>
+                </th>
+                <th>
+                  <select id="nodefilter" name="nodefilter" class="input-sm form-control" st-search="node_id">
+                    <option value="">All</option>
+                    <option value="{{row.node_id}}" ng-repeat="row in contents | unique:'node_id'">{{getResourceName( nodes, row.node_id )}}</option>
+                  </select>
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
         </thead>
         <tbody>
-            <tr ng-repeat="row in contents track by $index">
+            <tr ng-repeat="row in viewContents track by $index">
                 <td><a href="#/containers" ng-click="loadResource('containers', row.id)">{{row.name}}</a></td>
                 <td>
                     <span class="glyphicon glyphicon-ok-circle text-success" aria-hidden="true" ng-if="row.state == 'SUCCESS'"></span>
@@ -45,6 +76,10 @@
                         Delete
                     </button>
                 </td>
+            </tr>
+            <tr class="active">
+              <td colspan="3">Total Containers: {{contents.length}}</td>
+              <td colspan="4">Filtered Containers: {{viewContents.length}}</td>
             </tr>
         </tbody>
     </table>
