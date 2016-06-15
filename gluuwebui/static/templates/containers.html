@@ -20,25 +20,25 @@
                   <input st-search="name" placeholder="Enter text to filter" class="input-sm form-control" type="search"/>
                 </th>
                 <th>
-                  <select id="statefilter" name="statefilter" class="input-sm form-control" st-search="state">
+                  <select id="statefilter" name="statefilter" class="input-sm form-control" st-search="state" st-input-event="change">
                     <option value="">All</option>
                     <option value="{{row.state}}" ng-repeat="row in contents | unique:'state'">{{ row.state }}</option>
                   </select>
                 </th>
                 <th>
-                  <select id="typefilter" name="typefilter" class="input-sm form-control" st-search="type">
+                  <select id="typefilter" name="typefilter" class="input-sm form-control" st-search="type" st-input-event="change">
                     <option value="">All</option>
                     <option value="{{row.type}}" ng-repeat="row in contents | unique:'type'">{{ row.type }}</option>
                   </select>
                 </th>
                 <th>
-                  <select id="clusterfilter" name="clusterfilter" class="input-sm form-control" st-search="cluster_id">
+                  <select id="clusterfilter" name="clusterfilter" class="input-sm form-control" st-search="cluster_id" st-input-event="change">
                     <option value="">All</option>
                     <option value="{{row.cluster_id}}" ng-repeat="row in contents | unique:'cluster_id'">{{getResourceName( clusters, row.cluster_id )}}</option>
                   </select>
                 </th>
                 <th>
-                  <select id="nodefilter" name="nodefilter" class="input-sm form-control" st-search="node_id">
+                  <select id="nodefilter" name="nodefilter" class="input-sm form-control" st-search="node_id" st-input-event="change">
                     <option value="">All</option>
                     <option value="{{row.node_id}}" ng-repeat="row in contents | unique:'node_id'">{{getResourceName( nodes, row.node_id )}}</option>
                   </select>
