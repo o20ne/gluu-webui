@@ -61,7 +61,10 @@
                 <td>{{getResourceName( clusters, row.cluster_id )}}</td>
                 <td>{{getResourceName( nodes, row.node_id )}}</td>
                 <td>
-                  <p class="text-info" ng-if="!row.logFetched">Searching logs...</p>
+                  <p ng-if="!row.logFetched">
+                    <a class="btn btn-xs btn-default" href="" ng-click="fetchLogStatus(row.name)">Search</a>
+                  </p>
+                  <p class="text-info" ng-if="row.logSearching">Searching logs...</p>
                   <p class="text-danger" ng-if="row.logFetched && !row.hasSetupLog && !row.hasTeardownLog">No Logs found</p>
                   <p>
                     <a class="btn btn-xs btn-default" href="#/container_logs/{{row.name}}/setup" ng-if="row.hasSetupLog">Setup</a>

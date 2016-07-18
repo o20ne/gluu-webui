@@ -95,22 +95,35 @@ webuiControllers.controller('OverviewController', ['$scope', '$http', '$routePar
             if ( resource === 'containers' ){
                 angular.forEach($scope.contents, function(item, index){
                     $scope.contents[index].logFetched = false;
+                    $scope.contents[index].logSearching = false;
                     $scope.contents[index].hasSetupLog = false;
                     $scope.contents[index].hasTeardownLog = false;
-
-                    $http.get('/container_logs/'+item.name).success( function( data ){
-                        $scope.contents[index].logFetched = true;
-                        $scope.contents[index].hasSetupLog = data.setup_log_url;
-                        $scope.contents[index].hasTeardownLog = data.teardown_log_url;
-                    }).error(function(data){
-                        $scope.contents[index].logFetched = true;
-                        postErrorAlert(AlertMsg, data);
-                    });
-                });
+                   });
             }
         }).error(function(data){
             postErrorAlert(AlertMsg, data);
         });
+
+        /**
+         * Function to fetch log availability for a container
+         */
+        $scope.fetchLogStatus = function(name){
+            angular.forEach($scope.contents, function(item, index){
+                if( item.name === name ){
+                    $scope.contents[index].logSearching = true;
+                    $http.get('/container_logs/'+item.name).success( function( data ){
+                        $scope.contents[index].logFetched = true;
+                        $scope.contents[index].logSearching = false;
+                        $scope.contents[index].hasSetupLog = data.setup_log_url;
+                        $scope.contents[index].hasTeardownLog = data.teardown_log_url;
+                    }).error(function(data){
+                        $scope.contents[index].logFetched = true;
+                        $scope.contents[index].logSearching = false;
+                        postErrorAlert(AlertMsg, data);
+                    });
+                }
+            });
+        };
 
         /*
          * If it is containers, fetch the list of clusters and nodes for listing against each container
