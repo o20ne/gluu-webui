@@ -255,18 +255,6 @@ describe('Controllers', function(){
                 expect(AlertMsg.alerts.length).toEqual(3); // +1 for empty /containers
             });
 
-            it('should fetch the container_logs for each log and set the status', function(){
-                $httpBackend.expectGET('/containers').respond(200, [{id: 'some-id', name: 'some-name'}]);
-                $httpBackend.expectGET('/clusters').respond(200, []);
-                $httpBackend.expectGET('/nodes').respond(200, []);
-                $httpBackend.expectGET('/container_logs/some-name').respond(200, {setup_log_url: 'setup_url', teardown_log_url: 'teardown_url'})
-
-                var controller = createController('OverviewController');
-                $httpBackend.flush();
-
-                expect($rootScope.contents[0].hasSetupLog).toBeTruthy();
-                expect($rootScope.contents[0].hasTeardownLog).toBeTruthy();
-            });
         });
 
         describe('when the resoure id Node', function(){
