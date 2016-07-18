@@ -362,13 +362,8 @@ webuiControllers.controller( 'ResourceController', ['$scope', '$http', '$routePa
                 }
                 $http.post(url, data).success(function( data, status){
                     modal.dismiss();
-                    if( resource === 'containers' ){
-                        // redirect to node deploy log page
-                        $location.path('/container_logs/'+data.name+'/setup');
-                    } else {
-                        // redirect to the overview page with a message that new cluster was created
-                        $location.path('/'+resource);
-                    }
+                    // redirect to the overview page with a message that new cluster was created
+                    $location.path('/'+resource);
                 }).error(function( data ){
                     postErrorAlert(AlertMsg, data);
                     modal.dismiss();

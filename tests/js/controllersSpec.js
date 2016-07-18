@@ -483,7 +483,7 @@ describe('Controllers', function(){
                 $httpBackend.flush();
                 expect($location.path()).toEqual('/resource');
             });
-            it('should redirect to /container_logs/container_name/setup upon successful POST for containers', function(){
+            it('should redirect to /containers upon successful POST for containers', function(){
                 $routeParams = {resource: 'containers'};
                 $httpBackend.expectGET('/nodes').respond(200, []);
                 var controller = createController('ResourceController');
@@ -491,7 +491,7 @@ describe('Controllers', function(){
                 $httpBackend.expectPOST('/containers/oxauth', {}).respond(200, {name: 'container_1'});
                 $rootScope.submit();
                 $httpBackend.flush();
-                expect($location.path()).toEqual('/container_logs/container_1/setup');
+                expect($location.path()).toEqual('/containers');
             });
             it('should add an alert on POST failure in both Edit and Create', function(){
                 $routeParams = {resource: 'resource', id: 'some-id'};
