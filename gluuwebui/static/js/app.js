@@ -45,6 +45,7 @@ templateMaker.newTemplates = {
          'license_keys': 'templates/new_license_key.html',
          'providers': {
              'digitalocean': 'templates/new_do_provider.html',
+             'aws': 'templates/new_aws_provider.html',
              'generic': 'templates/new_generic_provider.html'
          },
          'clusters': 'templates/new_cluster.html',

@@ -158,7 +158,7 @@ def img(filename):
 
 
 @app.route("/nodes", methods=['GET'])
-@app.route("/nodes/<node_type>", methods=['GET', 'POST', 'DELETE'])
+@app.route("/nodes/<node_type>", methods=['GET', 'POST', 'PUT', 'DELETE'])
 def represent_node(node_type=None):
     if request.method == 'POST':  # Initiate create new node
         resp = api_post('nodes/{0}'.format(node_type),
@@ -168,6 +168,14 @@ def represent_node(node_type=None):
         name = node_type  # node_type for a delete request actually has name
         resp = api_delete('nodes', name)
         return json_response(resp)
+    elif request.method == 'PUT':
+        name = node_type  # node_type request actually has name
+        url = api_base + "nodes/{0}".format(name)
+        r = requests.put(url)
+        if r.status_code != 202:
+            raise APIError("Node Deployment retry failed for node: {0}".format(
+                name), r.status_code, reason(r))
+        return json_response(r.json())
 
     if node_type:
         resp = api_get("nodes/{0}".format(node_type))
@@ -229,6 +237,15 @@ def represent_containers(ctype=None):
         resp = api_get('containers/{0}'.format(ctype))
     else:
         resp = api_get('containers')
+    return json_response(resp)
+
+
+@app.route('/scale-containers/<ctype>/<count>', methods=['POST', 'DELETE'])
+def scale_containers(ctype, count):
+    if request.method == 'POST':
+        resp = api_post('scale-containers/{0}/{1}'.format(ctype, count))
+    elif request.method == 'DELETE':
+        resp = api_delete('scale-containers/{0}/{1}'.format(ctype, count))
     return json_response(resp)
 
 
