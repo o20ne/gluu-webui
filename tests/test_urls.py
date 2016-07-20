@@ -131,8 +131,11 @@ def test_resource_update():
     for item in resources:
         if item == '/license_keys':
             yield check_put_success, item
-        else:
+        elif not item == '/nodes':
             yield check_put_error, item
+
+    mock_put(202)
+    check_put_success('/nodes')
 
 
 #############################################################################
