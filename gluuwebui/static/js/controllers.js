@@ -362,7 +362,22 @@ webuiControllers.controller( 'ResourceController', ['$scope', '$http', '$routePa
                     modal.dismiss();
                     postErrorAlert(AlertMsg, data);
                 });
-            } else {
+            } else if (resource === 'scale_containers'){
+                callurl = "/scale-containers/" + $scope.container_type + "/" + $scope.count;
+
+                var callmethod = 'POST';
+                if ($scope.descale){
+                    callmethod = 'DELETE';
+                }
+
+                $http({method: callmethod, url: callurl}).success(function(data, status){
+                    modal.dismiss();
+                    $location.path('/containers');
+                }).error(function(data){
+                    modal.dismiss();
+                    postErrorAlert(AlertMsg, data);
+                });
+           } else {
                 if (resource === 'providers') {
                     // here the $routeParams.id carries the provider type; ugly override, should be fixed
                     url = "/providers/" + $routeParams.id;

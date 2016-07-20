@@ -243,9 +243,17 @@ def represent_containers(ctype=None):
 @app.route('/scale-containers/<ctype>/<count>', methods=['POST', 'DELETE'])
 def scale_containers(ctype, count):
     if request.method == 'POST':
-        resp = api_post('scale-containers/{0}/{1}'.format(ctype, count))
+        resp = api_post('scale-containers/{0}/{1}'.format(ctype, count), {})
     elif request.method == 'DELETE':
-        resp = api_delete('scale-containers/{0}/{1}'.format(ctype, count))
+        url = api_base + 'scale-containers/{0}/{1}'.format(ctype, count)
+        r = requests.delete(url)
+        if r.status_code != 202:
+            raise APIError(
+                "The descale request for {0} {1} containers failed.".format(
+                    count, ctype
+                ), r.status_code, reason(r)
+            )
+        resp = r.json()
     return json_response(resp)
 
 

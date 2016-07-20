@@ -50,7 +50,8 @@ templateMaker.newTemplates = {
          },
          'clusters': 'templates/new_cluster.html',
          'nodes': 'templates/new_node.html',
-         'containers': 'templates/new_container.html'
+         'containers': 'templates/new_container.html',
+         'scale_containers': 'templates/scale_containers.html'
 };
 
 templateMaker.viewTemplates = {
