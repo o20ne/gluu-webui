@@ -395,12 +395,12 @@ describe('Controllers', function(){
             it('should set counts of the available node types', function(){
                 $routeParams = {resource: 'nodes'};
                 $httpBackend.expectGET('/providers').respond(200, [{id: 'pro-1'}]);
-                $httpBackend.expectGET('/nodes').respond(200, [{type: 'discovery'}, {type: 'master'}]);
+                $httpBackend.expectGET('/nodes').respond(200, [{type: 'discovery'}, {type: 'master'}, {type: 'worker'}, {type: 'master'}]);
                 var controller = createController('ResourceController');
                 $httpBackend.flush();
-                expect($rootScope.masterCount).toEqual(1);
+                expect($rootScope.masterCount).toEqual(2);
                 expect($rootScope.discoveryCount).toEqual(1);
-                expect($rootScope.workerCount).toEqual(0);
+                expect($rootScope.workerCount).toEqual(1);
             });
 
         });
