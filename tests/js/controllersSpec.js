@@ -279,6 +279,29 @@ describe('Controllers', function(){
             });
         });
 
+        describe('$scope.fetchLogStatus', function(){
+            beforeEach(function(){
+                var resources = [{id: 'test-id1', name: 'name1'}, {id: 'test-id2', name: 'name2'}, {id: 'test-id3', name: 'name3'}];
+                $httpBackend.when('GET', '/providers').respond(200, resources);
+                var controller = createController('OverviewController');
+                $httpBackend.flush();
+            });
+            it('should request container-logs if the name matches', function(){
+                expect($rootScope.contents[0].hasSetupLog).toBeUndefined()
+                $httpBackend.when('GET', '/container_logs/name1').respond(200, {setup_log_url: 'setup', teardown_log_url: 'teardown'});
+                $rootScope.fetchLogStatus('name1');
+                $httpBackend.flush();
+                expect($rootScope.contents[0].hasSetupLog).toBeDefined()
+            });
+            it('should post an error alert if it fetch fails', function(){
+                expect(AlertMsg.alerts.length).toEqual(0);
+                $httpBackend.expectGET('/container_logs/name1').respond(400, {message: 'error'});
+                $rootScope.fetchLogStatus('name1');
+                $httpBackend.flush();
+                expect(AlertMsg.alerts.length).toEqual(1);
+            });
+        });
+
     });
 
     describe('ResourceController', function(){
@@ -498,6 +521,34 @@ describe('Controllers', function(){
                 $rootScope.submit();
                 $httpBackend.flush();
                 expect(AlertMsg.alerts.length).toEqual(2);
+            });
+
+            it('should post data to /scale-containers/type/count when the resource is scale-containers', function(){
+                $routeParams = {resource: 'scale_containers'};
+                var controller = createController('ResourceController');
+                $rootScope.container_type = 'nginx';
+                $rootScope.count = 20;
+
+                $httpBackend.expectPOST('/scale-containers/nginx/20').respond(200, 'OK');
+                $rootScope.submit();
+                $httpBackend.flush();
+
+                $rootScope.descale = true;
+                $httpBackend.expectDELETE('/scale-containers/nginx/20').respond(200, 'OK');
+                $rootScope.submit();
+                $httpBackend.flush();
+            });
+
+            it('should add an alert when /scale-containers fails', function(){
+                $routeParams = {resource: 'scale_containers'};
+                $rootScope.container_type = 'nginx';
+                $rootScope.count = 20;
+                $httpBackend.expectPOST('/scale-containers/nginx/20').respond(400, {message: 'not accepted'});
+                var controller = createController('ResourceController');
+                expect(AlertMsg.alerts.length).toEqual(0);
+                $rootScope.submit();
+                $httpBackend.flush();
+                expect(AlertMsg.alerts.length).toEqual(1);
             });
         });
     });
