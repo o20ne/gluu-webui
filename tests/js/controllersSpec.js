@@ -880,3 +880,42 @@ describe('Controllers', function(){
         });
     });
 });
+
+describe('Directives', function(){
+    var $compile, $rootScope, form;
+
+    // load the controllers modules - parent of the `clustername` directive
+    beforeEach(module('webuiControllers'));
+
+    beforeEach(inject(function(_$compile_, _$rootScope_){
+        $compile = _$compile_;
+        $rootScope = _$rootScope_;
+
+        var element = angular.element(
+                '<form name="form">'+
+                '<input name="cluster_name" ng-model="resourceData.cluster_name" clustername />'+
+                '</form>'
+                );
+        $rootScope.resourceData = {cluster_name : null};
+        $compile(element)($rootScope);
+        form = $rootScope.form;
+    }));
+
+    describe('directive: clustername', function(){
+        it('should validate the string passed to it', function(){
+            var valid_names = ['valid', 'canHave2343', 'also.sda', 'even_this', 'always_1onger.than_3', 'this-is-ok-too'];
+            for (var i=0; i < valid_names.length; i++){
+                form.cluster_name.$setViewValue(valid_names[i]);
+                $rootScope.$digest();
+                expect(form.cluster_name.$valid).toBe(true);
+            }
+
+            var invalid_names = ['', 'me', '_start', 'end_', 'doesn\'t count', '...', 'notdot.', '.neither', '____', '-not-this', 'or-this-'];
+            for (var i=0; i < invalid_names.length; i++){
+                form.cluster_name.$setViewValue(invalid_names[i]);
+                $rootScope.$digest();
+                expect(form.cluster_name.$valid).toBe(false);
+            }
+        });
+    });
+});

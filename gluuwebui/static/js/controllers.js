@@ -230,7 +230,9 @@ webuiControllers.directive('clustername', function(){
                 if (ctrl.$isEmpty(modelValue)) {
                     return true;
                 }
-
+                if(modelValue.length < 3){
+                    return false;
+                }
                 if (CLUSTER_NAME_REGEX.test(modelValue)) {
                     return true;
                 }
