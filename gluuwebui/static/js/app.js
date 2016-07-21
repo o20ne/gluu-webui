@@ -6,6 +6,7 @@ var gluuwebui = angular.module('gluuwebui', [
         'smart-table'
         ]);
 
+/* istanbul ignore next */
 gluuwebui.filter('unique', function() {
     return function (arr, field) {
         var o = {}, i, l = arr.length, r = [];

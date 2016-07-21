@@ -910,12 +910,18 @@ describe('Directives', function(){
                 expect(form.cluster_name.$valid).toBe(true);
             }
 
-            var invalid_names = ['', 'me', '_start', 'end_', 'doesn\'t count', '...', 'notdot.', '.neither', '____', '-not-this', 'or-this-'];
+            var invalid_names = ['me', '_start', 'end_', 'doesn\'t count', '...', 'notdot.', '.neither', '____', '-not-this', 'or-this-'];
             for (var i=0; i < invalid_names.length; i++){
                 form.cluster_name.$setViewValue(invalid_names[i]);
                 $rootScope.$digest();
                 expect(form.cluster_name.$valid).toBe(false);
             }
+        });
+
+        it('should send back true when the field is empty', function(){
+            form.cluster_name.$setViewValue('');
+            $rootScope.$digest();
+            expect(form.cluster_name.$valid).toBe(true);
         });
     });
 });
