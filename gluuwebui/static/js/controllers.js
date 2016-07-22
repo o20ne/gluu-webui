@@ -219,6 +219,23 @@ webuiControllers.controller('OverviewController', ['$scope', '$http', '$routePar
             });
         };
 
+        /*
+         * Function to make a Node deployment retry PUT request
+         */
+        $scope.retryNode = function(name){
+            $http.put('/nodes/'+name).success(function(data){
+                // update the node details with the latest data
+                angular.forEach($scope.contents, function(item, index){
+                    if( item.name === name ){
+                        $scope.contents[index] = data;
+                    }
+                });
+                AlertMsg.addMsg('Retry request for Node: '+ name +' has been accepted.', 'success');
+            }).error(function(data){
+                postErrorAlert(AlertMsg, data)
+            });
+        };
+
 }]);
 
 var CLUSTER_NAME_REGEX = /^[a-zA-Z\d]+[\w\d\.\-]*[a-zA-Z\d]$/;
