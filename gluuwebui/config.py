@@ -5,9 +5,11 @@ class Config(object):
     DEBUG = False
     TESTING = False
     SECRET_KEY = 'secret_key'
+
+    # don't forget the trailing slash
     API_SERVER_URL = os.environ.get(
         "API_SERVER_URL",
-        "http://gluuengine:8080",
+        "http://gluuengine:8080/",
     )
 
 
