@@ -3,7 +3,10 @@ class Config(object):
     DEBUG = False
     TESTING = False
     SECRET_KEY = 'secret_key'
-    API_SERVER_URL = 'http://127.0.0.1:8080/'
+    API_SERVER_URL = os.environ.get(
+        "API_SERVER_URL",
+        "http://gluuengine:8080",
+    )
 
 
 class ProductionConfig(Config):
