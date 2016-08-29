@@ -460,11 +460,10 @@ webuiControllers.controller( 'DashboardController', ['$scope', '$http', '$routeP
             var ldap = getCount(data, 'type', 'ldap'),
                 oxauth = getCount(data, 'type', 'oxauth'),
                 nginx = getCount(data, 'type', 'nginx'),
-                oxtrust = getCount(data, 'type', 'oxtrust'),
-                oxidp = getCount(data, 'type', 'oxidp');
+                oxtrust = getCount(data, 'type', 'oxtrust');
 
-            $scope.conTypes = [ldap+' - LDAP', oxauth+' - OxAuth', nginx+' - Nginx', oxtrust+' - OxTrust', oxidp+' - OxIDP'];
-            $scope.conTypeCount = [ldap, oxauth, nginx, oxtrust, oxidp];
+            $scope.conTypes = [ldap+' - LDAP', oxauth+' - OxAuth', nginx+' - Nginx', oxtrust+' - OxTrust'];
+            $scope.conTypeCount = [ldap, oxauth, nginx, oxtrust];
 
             var success = getCount(data, 'state', 'SUCCESS'),
                 progress = getCount(data, 'state', 'IN_PROGRESS'),

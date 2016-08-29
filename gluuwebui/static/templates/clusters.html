@@ -16,7 +16,6 @@
                 <th>OxAuth Containers</th>
                 <th>OxTrust Containers</th>
                 <th>Nginx Containers</th>
-                <th>oxIdp Containers</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -30,7 +29,6 @@
                 <td>{{row.oxauth_containers.length}}</td>
                 <td>{{row.oxtrust_containers.length}}</td>
                 <td>{{row.nginx_containers.length}}</td>
-                <td>{{row.oxidp_containers.length}}</td>
                 <td>
                     <button class="btn btn-danger btn-sm" ng-click="deleteResource('clusters', row.id)">Delete</button>
                 </td>

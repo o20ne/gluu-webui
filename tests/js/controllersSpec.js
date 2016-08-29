@@ -466,9 +466,9 @@ describe('Controllers', function(){
                 $routeParams = {resource: 'containers'};
                 $httpBackend.expectGET('/nodes').respond(200, []);
                 var controller = createController('ResourceController');
-                $rootScope.container_type = 'oxidp';
+                $rootScope.container_type = 'oxtrust';
                 $rootScope.resourceData = {id: 'id1'};
-                $httpBackend.expectPOST('/containers/oxidp', {id: 'id1'}).respond(200, 'OK');
+                $httpBackend.expectPOST('/containers/oxtrust', {id: 'id1'}).respond(200, 'OK');
                 $rootScope.editMode = false;
                 $rootScope.submit();
                 $httpBackend.flush();
