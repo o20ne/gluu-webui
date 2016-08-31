@@ -8,7 +8,7 @@ from setuptools import setup
 
 setup(
         name="Gluu-WebUI",
-        version="0.5.1",
+        version="0.5.2",
         url="https://github.com/GluuFederation/gluu-webui",
         license="MIT",
         author="Gluu",
