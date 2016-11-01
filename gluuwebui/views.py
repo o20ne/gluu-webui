@@ -144,17 +144,22 @@ def template(filename):
 
 @app.route("/js/<filename>")
 def js(filename):
-    return redirect(url_for('static', filename="js/{0}".format(filename)))
+    content = get_file('static/js/{0}'.format(filename))
+    return Response(content, mimetype="text/js")
 
 
 @app.route("/css/<filename>")
 def css(filename):
-    return redirect(url_for('static', filename="css/{0}".format(filename)))
+    content = get_file('static/css/{0}'.format(filename))
+    return Response(content, mimetype="text/css")
 
 
 @app.route("/img/<filename>")
 def img(filename):
-    return redirect(url_for('static', filename="img/{0}".format(filename)))
+    content = get_file('static/img/{0}'.format(filename))
+    # @todo: mimetype accuracy
+    extension = filename.split(".")[-1]
+    return Response(content, mimetype="image/"+extension)
 
 
 @app.route("/nodes", methods=['GET'])
