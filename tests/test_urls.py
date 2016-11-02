@@ -187,8 +187,13 @@ def test_delete_parses_forcerm_querystring():
 def test_static_redirects():
     statics = ['js', 'css', 'img']
     for folder in statics:
-        ro = app.get("/{0}/{1}".format(folder, 'somefile.ext'))
-        assert_equal(ro.status_code, 302)
+        ro = app.get("/{0}/{1}".format(folder, 'testfile.txt'))  # existing file
+        assert_equal(ro.status_code, 200)
+        assert_equal('Test Assets', ro.data)
+
+        ro = app.get("/{0}/{1}".format(folder, 'non_existant_file.txt'))
+        assert_equal(ro.status_code, 200)
+        assert_in('No such file or directory', ro.data)
 
 
 def test_templates():
